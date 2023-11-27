@@ -4,13 +4,11 @@ project(SDL2Test)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SDL2_DIR C:/dev/vcpkg/installed/x64-windows/share/sdl2)
-
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS} src)
+find_package(SDL2_ttf REQUIRED)
 
 add_executable(SnakeGame
         src/main.cpp
@@ -18,9 +16,18 @@ add_executable(SnakeGame
         src/controller.cpp
         src/renderer.cpp
         src/snake.cpp
-        src/ScoreSheet.h
-        src/ScoreSheet.cpp)
+        src/scoreSheet.h
+        src/scoreSheet.cpp
+        src/menu.h
+        src/menu.cpp
+)
+
+target_include_directories(SnakeGame PRIVATE
+        ${SDL2_INCLUDE_DIRS}
+        ${SDL2_TTF_INCLUDE_DIRS}
+        src)
 
 target_link_libraries(SnakeGame PRIVATE
-        C:/dev/vcpkg/installed/x64-windows/lib/manual-link/SDL2main.lib
-        C:/dev/vcpkg/installed/x64-windows/lib/SDL2.lib)
+        SDL2::SDL2
+        SDL2::SDL2main
+        SDL2_ttf::SDL2_ttf)

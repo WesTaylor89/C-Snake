@@ -2,15 +2,15 @@
 // Created by Wesley on 24/11/2023.
 //
 
-#include "ScoreSheet.h"
+#include "scoreSheet.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 
-ScoreSheet::ScoreSheet() = default;
+scoreSheet::scoreSheet() = default;
 
 // Function to insert a pair into the vector in the correct ordered place
-void ScoreSheet::insertOrdered(const std::pair<std::string, int>& newPair) {
+void scoreSheet::insertOrdered(const std::pair<std::string, int>& newPair) {
     auto it = std::lower_bound(scores.begin(), scores.end(), newPair,
                                [](const std::pair<std::string, int>& lhs, const std::pair<std::string, int>& rhs) {
                                    return lhs.second < rhs.second;
@@ -20,8 +20,24 @@ void ScoreSheet::insertOrdered(const std::pair<std::string, int>& newPair) {
 }
 
 // Function to display all pairs in the scores vector
-void ScoreSheet::displayScores() const {
-    for (const auto& pair : scores) {
+void scoreSheet::displayScores() const {
+    for (const auto &pair: scores) {
         std::cout << pair.first << ": " << pair.second << std::endl;
     }
 }
+
+std::pair<std::string, int> scoreSheet::createPair(std::string name, int score) {
+    return std::make_pair(name, score);
+}
+
+void scoreSheet::setPlayerName() {
+    std::cout << "Enter your name: ";
+    std::string playerName;
+    std::getline(std::cin, playerName);
+    _playerName = playerName;
+}
+
+std::string scoreSheet::getPlayerName() {
+    return _playerName;
+}
+
