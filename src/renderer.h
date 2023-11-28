@@ -5,6 +5,7 @@
 #include <vector>
 #include "SDL.h"
 #include "snake.h"
+#include <SDL2/SDL_ttf.h>
 
 class Renderer {
 public:
@@ -24,6 +25,8 @@ private:
     const std::size_t screen_height;
     const std::size_t grid_width;
     const std::size_t grid_height;
+
+    TTF_Font *font;
 };
 
 #endif

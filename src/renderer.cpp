@@ -21,6 +21,13 @@ Renderer::Renderer(const std::size_t screen_width,
         std::cerr << "SDL_ttf could not initialize. SDL_ttf Error: " << TTF_GetError() << "\n";
     }
 
+    // Load a font using SDL_ttf
+    font = TTF_OpenFont("C:/Users/Wesle/CLionProjects/SDL2Test/fonts/Debrosee-ALPnL.ttf", 24);
+    if (font == nullptr) {
+        std::cerr << "Failed to load font. SDL_ttf Error: " << TTF_GetError() << "\n";
+        // TODO: Handle error
+    }
+
     // Create Window
     sdl_window = SDL_CreateWindow("Snake Game", SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED, screen_width,
@@ -41,63 +48,57 @@ Renderer::Renderer(const std::size_t screen_width,
 
 Renderer::~Renderer() {
   SDL_DestroyWindow(sdl_window);
+  TTF_CloseFont(font);
   SDL_Quit();
   TTF_Quit();
 }
 
 void Renderer::Render(Snake const snake, SDL_Point const &food) {
-  SDL_Rect block;
-  block.w = screen_width / grid_width;
-  block.h = screen_height / grid_height;
+    SDL_Rect block;
+    block.w = screen_width / grid_width;
+    block.h = screen_height / grid_height;
 
-  // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
-  SDL_RenderClear(sdl_renderer);
+    // Clear screen
+    SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+    SDL_RenderClear(sdl_renderer);
 
-  // Render food
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-  block.x = food.x * block.w;
-  block.y = food.y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+    // Render food
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
+    block.x = food.x * block.w;
+    block.y = food.y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
 
-  // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (SDL_Point const &point : snake.body) {
+    // Render snake's body
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    for (SDL_Point const &point : snake.body) {
     block.x = point.x * block.w;
     block.y = point.y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
-  }
+    }
 
-  // Render snake's head
-  block.x = static_cast<int>(snake.head_x) * block.w;
-  block.y = static_cast<int>(snake.head_y) * block.h;
-  if (snake.alive) {
+    // Render snake's head
+    block.x = static_cast<int>(snake.head_x) * block.w;
+    block.y = static_cast<int>(snake.head_y) * block.h;
+    if (snake.alive) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-  } else {
+    } else {
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-  }
-  SDL_RenderFillRect(sdl_renderer, &block);
+    }
+    SDL_RenderFillRect(sdl_renderer, &block);
 
-  // Update Screen
-  SDL_RenderPresent(sdl_renderer);
+    // Update Screen
+    SDL_RenderPresent(sdl_renderer);
 }
 
 void Renderer::UpdateWindowTitle(int score, int fps) {
-  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
-  SDL_SetWindowTitle(sdl_window, title.c_str());
+    std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+    SDL_SetWindowTitle(sdl_window, title.c_str());
 }
 
 void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedOption) {
     // Clear screen
     SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
     SDL_RenderClear(sdl_renderer);
-
-    // Load a font using SDL_ttf
-    TTF_Font *font = TTF_OpenFont("C:/Users/Wesle/CLionProjects/SDL2Test/fonts/Debrosee-ALPnL.ttf", 24);
-    if (font == nullptr) {
-        std::cerr << "Failed to load font. SDL_ttf Error: " << TTF_GetError() << "\n";
-        // Handle error
-    }
 
     // Set text color
     SDL_Color textColor = {255, 255, 255, 255}; // White color
@@ -136,8 +137,7 @@ void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedO
         SDL_DestroyTexture(texture);
     }
 
-    // After rendering all options, close the font
-    TTF_CloseFont(font);
+
 
     // Update Screen
     SDL_RenderPresent(sdl_renderer);
