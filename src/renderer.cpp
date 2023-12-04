@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <SDL2/SDL_ttf.h>
+#include <scoreSheet.h>
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -136,10 +137,47 @@ void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedO
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
     }
-
-
-
     // Update Screen
     SDL_RenderPresent(sdl_renderer);
 }
 
+void Renderer::RenderNameInputForm(const std::string &currentInput) {
+    // Clear screen
+    SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+    SDL_RenderClear(sdl_renderer);
+
+    // Set text color
+    SDL_Color textColor = {255, 255, 255, 255}; // White color
+
+    // Handle empty input (show placeholder or cursor)
+    std::string displayText = currentInput.empty() ? "Enter Name: _" : currentInput;
+
+    // Create surface from the current input text
+    SDL_Surface *surface = TTF_RenderText_Solid(font, displayText.c_str(), textColor);
+    if (surface == nullptr) {
+        std::cerr << "Unable to create text surface. SDL_ttf Error: " << TTF_GetError() << "\n";
+    } else {
+        // Create texture from surface
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(sdl_renderer, surface);
+        if (texture == nullptr) {
+            std::cerr << "Unable to create texture from surface. SDL Error: " << SDL_GetError() << "\n";
+        } else {
+            // Define position to render the text (centered)
+            int x = (screen_width - surface->w) / 2;
+            int y = (screen_height - surface->h) / 2;
+            SDL_Rect renderQuad = {x, y, surface->w, surface->h};
+
+            // Render text
+            SDL_RenderCopy(sdl_renderer, texture, nullptr, &renderQuad);
+
+            // Clean up texture
+            SDL_DestroyTexture(texture);
+        }
+
+        // Clean up surface
+        SDL_FreeSurface(surface);
+    }
+
+    // Update Screen
+    SDL_RenderPresent(sdl_renderer);
+}

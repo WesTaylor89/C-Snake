@@ -25,11 +25,36 @@ int main() {
 
     Menu menu;
 
+    std::string playerName;
+    bool nameEntered = false;
+
+    SDL_StartTextInput();
+    while (!nameEntered) {
+        renderer.RenderNameInputForm(playerName);
+
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                nameEntered = true; // or handle the quit event as needed
+            } else if (e.type == SDL_TEXTINPUT) {
+                playerName += e.text.text; // Append the character
+            } else if (e.type == SDL_KEYDOWN) {
+                if (e.key.keysym.sym == SDLK_BACKSPACE && !playerName.empty()) {
+                    playerName.pop_back(); // Remove last character
+                } else if (e.key.keysym.sym == SDLK_RETURN) {
+                    nameEntered = true; // Finish text input
+                }
+            }
+        }
+    }
+    SDL_StopTextInput(); // Stop text input
+
+
     bool quit = false;
     while (!quit) {
 
         renderer.RenderMenu(menu.GetOptions(), menu.GetSelectedOption());
-        menu.Update(renderer);
+        controller.Update(renderer, menu);
 
         switch (menu.GetSelectedOption()) {
             case 0: // New Game

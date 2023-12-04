@@ -24,6 +24,9 @@ public:
     int GetSelectedOption() const;
     const std::vector<std::string>& GetOptions() const;
 
+    // Setters
+    void SetSelectedOption(int option);
+
 private:
     // Vector of Strings to hold selectable menu options
     std::vector<std::string> options;

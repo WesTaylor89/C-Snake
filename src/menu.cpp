@@ -14,39 +14,14 @@ Menu::~Menu() {
     // Cleanup if needed
 }
 
-void Menu::Update(Renderer &screenRender) {
-    SDL_Event e;
-    bool optionSelected = false;
-
-    while (!optionSelected) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                selectedOption = options.size() - 1; // Set to Quit
-                optionSelected = true;
-            } else if (e.type == SDL_KEYDOWN) { // listen for keydown events
-                switch (e.key.keysym.sym) { // check keycode
-                    case SDLK_UP:
-                        selectedOption = (selectedOption + options.size() - 1) % options.size();
-                        // rerender page to update selected option highlight
-                        screenRender.RenderMenu(GetOptions(), GetSelectedOption());
-                        break;
-                    case SDLK_DOWN:
-                        selectedOption = (selectedOption + 1) % options.size();
-                        screenRender.RenderMenu(GetOptions(), GetSelectedOption());
-                        break;
-                    case SDLK_RETURN:
-                        optionSelected = true;
-                        break;
-                }
-            }
-        }
-    }
-}
-
 int Menu::GetSelectedOption() const {
     return selectedOption;
 }
 
 const std::vector<std::string>& Menu::GetOptions() const {
     return options;
+}
+
+void Menu::SetSelectedOption(int option) {
+    selectedOption = option;
 }

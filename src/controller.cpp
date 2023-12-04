@@ -39,3 +39,38 @@ void Controller::HandleInput(bool &running, Snake &snake) const {
     }
   }
 }
+
+void Controller::Update(Renderer &screenRender, Menu &menu) {
+    SDL_Event e;
+    bool optionSelected = false;
+    int selectedOption;
+    int optionsSize = menu.GetOptions().size();
+
+    while (!optionSelected) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                selectedOption = optionsSize - 1; // Set to Quit
+                menu.SetSelectedOption(selectedOption);
+                optionSelected = true;
+            } else if (e.type == SDL_KEYDOWN) { // listen for keydown events
+                switch (e.key.keysym.sym) { // check keycode
+                    case SDLK_UP:
+                        selectedOption = (selectedOption + optionsSize - 1) % optionsSize;
+                        menu.SetSelectedOption(selectedOption);
+                        // rerender page to update selected option highlight
+                        screenRender.RenderMenu(menu.GetOptions(), menu.GetSelectedOption());
+                        break;
+                    case SDLK_DOWN:
+                        selectedOption = (selectedOption + 1) % optionsSize;
+                        menu.SetSelectedOption(selectedOption);
+                        screenRender.RenderMenu(menu.GetOptions(), menu.GetSelectedOption());
+                        break;
+                    case SDLK_RETURN:
+                        optionSelected = true;
+                        break;
+                }
+            }
+        }
+    }
+}
+

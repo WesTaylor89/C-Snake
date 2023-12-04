@@ -16,6 +16,8 @@ public:
     void Render(Snake const snake, SDL_Point const &food);
     void UpdateWindowTitle(int score, int fps);
     void RenderMenu(const std::vector<std::string> &options, int selectedOption);
+//    void RenderEnterNameForm();
+    void RenderNameInputForm(const std::string &currentInput);
 
 private:
     SDL_Window *sdl_window;
@@ -26,7 +28,7 @@ private:
     const std::size_t grid_width;
     const std::size_t grid_height;
 
-    TTF_Font *font;
+    TTF_Font *font; // font to be used
 };
 
 #endif
