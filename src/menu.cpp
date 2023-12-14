@@ -6,8 +6,8 @@
 #include "renderer.h"
 #include <SDL2/SDL.h>
 
-Menu::Menu() : selectedOption(0) {
-    options = {"New Game", "Score Board", "Quit"};
+Menu::Menu() : _selectedOption(0) {
+    _options = {"Single Player", "Vs AI", "Score Board", "Quit"};
 }
 
 Menu::~Menu() {
@@ -15,13 +15,13 @@ Menu::~Menu() {
 }
 
 int Menu::GetSelectedOption() const {
-    return selectedOption;
+    return _selectedOption;
 }
 
 const std::vector<std::string>& Menu::GetOptions() const {
-    return options;
+    return _options;
 }
 
 void Menu::SetSelectedOption(int option) {
-    selectedOption = option;
+    _selectedOption = option;
 }

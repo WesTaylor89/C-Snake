@@ -7,9 +7,11 @@
 
 class Controller {
 public:
-    void HandleInput(bool &running, Snake &snake) const;
+    int HandleInput(int &game_running, Snake &snake) const;
 
-    void Update(Renderer &screenRender, Menu &menu);
+    void UpdateMenu(Renderer &screenRender, Menu &menu);
+
+    void UpdateNameInput(std::string &playerName, bool &nameEntered);
 
 private:
     void ChangeDirection(Snake &snake, Snake::Direction input,

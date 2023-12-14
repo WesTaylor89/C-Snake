@@ -14,11 +14,10 @@
 
 class Menu {
 public:
+    // Constructor
     Menu();
+    // Destructor
     ~Menu();
-
-    // Update menu based on user input
-    void Update(Renderer &screenRender);
 
     // Getters
     int GetSelectedOption() const;
@@ -28,10 +27,10 @@ public:
     void SetSelectedOption(int option);
 
 private:
-    // Vector of Strings to hold selectable menu options
-    std::vector<std::string> options;
-    // Index of selected option from options vector
-    int selectedOption;
+    // Vector of Strings to hold selectable menu _options
+    std::vector<std::string> _options;
+    // Index of selected option from _options vector
+    int _selectedOption;
 };
 
 

@@ -16,10 +16,13 @@ add_executable(SnakeGame
         src/controller.cpp
         src/renderer.cpp
         src/snake.cpp
-        src/scoreSheet.h
-        src/scoreSheet.cpp
+        src/scoresheet.h
+        src/scoresheet.cpp
         src/menu.h
         src/menu.cpp
+        src/ai_snake.h
+        src/ai_snake.cpp
+        src/sdl_utility.h
 )
 
 target_include_directories(SnakeGame PRIVATE

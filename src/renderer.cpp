@@ -1,8 +1,9 @@
 #include "renderer.h"
+#include "ai_snake.h"
 #include <iostream>
 #include <string>
 #include <SDL2/SDL_ttf.h>
-#include <scoreSheet.h>
+#include <scoresheet.h>
 
 Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
@@ -54,7 +55,39 @@ Renderer::~Renderer() {
   TTF_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+// Render Snake
+void Renderer::RenderSnake(const Snake &snake, SDL_Rect &block) {
+    // Set the color for the snake's body
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF); // Example color: White
+
+    // Render snake's body
+    for (SDL_Point const &point : snake.body) {
+        block.x = point.x * block.w;
+        block.y = point.y * block.h;
+        SDL_RenderFillRect(sdl_renderer, &block);
+    }
+
+    // Render snake's head
+    block.x = static_cast<int>(snake.head_x) * block.w;
+    block.y = static_cast<int>(snake.head_y) * block.h;
+    if (snake.alive) {
+        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF); // Example color for the head
+    } else {
+        SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF); // Example color if not alive
+    }
+    SDL_RenderFillRect(sdl_renderer, &block);
+}
+
+// Render Food
+void Renderer::RenderFood(const SDL_Point &food, SDL_Rect &block) {
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF); // Food color
+    block.x = food.x * block.w;
+    block.y = food.y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
+}
+
+// Render snake and food for single player
+void Renderer::Render(const Snake &playerSnake, const SDL_Point &food) {
     SDL_Rect block;
     block.w = screen_width / grid_width;
     block.h = screen_height / grid_height;
@@ -63,29 +96,34 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
     SDL_RenderClear(sdl_renderer);
 
+    // Render player snake's body and head
+    RenderSnake(playerSnake, block);
+
     // Render food
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-    block.x = food.x * block.w;
-    block.y = food.y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
+    RenderFood(food, block);
 
-    // Render snake's body
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    for (SDL_Point const &point : snake.body) {
-    block.x = point.x * block.w;
-    block.y = point.y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
-    }
+    // Update Screen
+    SDL_RenderPresent(sdl_renderer);
+}
 
-    // Render snake's head
-    block.x = static_cast<int>(snake.head_x) * block.w;
-    block.y = static_cast<int>(snake.head_y) * block.h;
-    if (snake.alive) {
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-    } else {
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-    }
-    SDL_RenderFillRect(sdl_renderer, &block);
+// Render snake, AI snake and food for player vs AI
+void Renderer::Render(const Snake &playerSnake, const ai_snake &aiSnake, const SDL_Point &food) {
+    SDL_Rect block;
+    block.w = screen_width / grid_width;
+    block.h = screen_height / grid_height;
+
+    // Clear screen
+    SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+    SDL_RenderClear(sdl_renderer);
+
+    // Render player snake's body and head
+    RenderSnake(playerSnake, block);
+
+    // Render AI snake's body and head
+    RenderSnake(aiSnake, block);
+
+    // Render food
+    RenderFood(food, block);
 
     // Update Screen
     SDL_RenderPresent(sdl_renderer);
@@ -96,6 +134,8 @@ void Renderer::UpdateWindowTitle(int score, int fps) {
     SDL_SetWindowTitle(sdl_window, title.c_str());
 }
 
+
+// Render the menu page
 void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedOption) {
     // Clear screen
     SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
@@ -104,17 +144,17 @@ void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedO
     // Set text color
     SDL_Color textColor = {255, 255, 255, 255}; // White color
 
-    // Define positions for rendering menu options
+    // Define positions for rendering menu _options
     int xPos = screen_width / 4; // Adjust as needed
     int yPos = screen_height / 4; // Starting vertical position for the first menu option
-    int optionHeight = 50; // Height between menu options
+    int optionHeight = 50; // Height between menu _options
 
     for (size_t i = 0; i < options.size(); i++) {
         if (i == selectedOption) {
             // Highlight the selected option, e.g., by changing its color
             textColor = {255, 255, 0, 255}; // Yellow color for selected option
         } else {
-            textColor = {255, 255, 255, 255}; // White color for non-selected options
+            textColor = {255, 255, 255, 255}; // White color for non-selected _options
         }
 
         // Create surface from text
@@ -141,7 +181,8 @@ void Renderer::RenderMenu(const std::vector<std::string> &options, int selectedO
     SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::RenderNameInputForm(const std::string &currentInput) {
+// Render the name input page
+void Renderer::RenderNameInput(const std::string &currentInput) {
     // Clear screen
     SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
     SDL_RenderClear(sdl_renderer);
@@ -181,3 +222,5 @@ void Renderer::RenderNameInputForm(const std::string &currentInput) {
     // Update Screen
     SDL_RenderPresent(sdl_renderer);
 }
+
+

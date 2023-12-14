@@ -10,10 +10,10 @@
 #include <vector>
 #include <iostream>
 
-class scoreSheet {
+class Scoresheet {
 public:
     // Constructor
-    scoreSheet();
+    Scoresheet();
 
     // Function to insert a pair into the vector in the correct ordered place
     void insertOrdered(const std::pair<std::string, int>& newPair);
@@ -21,11 +21,11 @@ public:
     // Function to display scores.
     void displayScores() const;
 
-    // Creates a new player/score pair.
+    // Creates a new player/_score pair.
     std::pair<std::string, int> createPair(std::string name, int score);
 
     // Set player name
-    void setPlayerName();
+    void setPlayerName(std::string playerName);
     std::string getPlayerName();
 
 private:
