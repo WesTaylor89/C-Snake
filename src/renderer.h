@@ -7,11 +7,14 @@
 #include "snake.h"
 #include "ai_snake.h"
 #include <SDL2/SDL_ttf.h>
+#include <memory>
 
 class Renderer {
 public:
-    Renderer(const std::size_t screen_width, const std::size_t screen_height,
-           const std::size_t grid_width, const std::size_t grid_height);
+    Renderer(const std::size_t screen_width,
+             const std::size_t screen_height,
+             const std::size_t grid_width,
+             const std::size_t grid_height);
     ~Renderer();
 
     void RenderSnake(Snake const &snake, SDL_Rect &block);
@@ -26,8 +29,10 @@ public:
     void RenderNameInput(const std::string &currentInput);
 
 private:
-    SDL_Window *sdl_window;
-    SDL_Renderer *sdl_renderer;
+
+    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> sdl_window;
+    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> sdl_renderer;
+
 
     const std::size_t screen_width;
     const std::size_t screen_height;

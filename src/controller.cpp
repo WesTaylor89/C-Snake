@@ -3,18 +3,11 @@
 #include "SDL.h"
 #include "snake.h"
 
-//void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
-//                                 Snake::Direction opposite) const {
-//  if (snake.direction != opposite || snake.size == 1) snake.direction = input;
-//  return;
-//}
-
 void Controller::ChangeDirection(Snake &snake, Snake::Direction input, Snake::Direction opposite) const {
     // Only change direction if not opposite or if the snake size is 1
     if (snake.direction != opposite || snake.size == 1) {
         snake.direction = input;
     }
-    return;
 }
 
 // Handle user input for game
@@ -55,7 +48,7 @@ int Controller::HandleInput(int &game_running, Snake &snake) const {
 void Controller::UpdateMenu(Renderer &screenRender, Menu &menu) {
     SDL_Event e;
     bool optionSelected = false;
-    int selectedOption;
+    int selectedOption = 0;
     int optionsSize = menu.GetOptions().size();
 
     while (!optionSelected) {

@@ -34,7 +34,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
         }
 
         // Update
-        Update();
+        // Handled in main.cpp by threads
 
         // Render
         if (_withAI) {
@@ -66,7 +66,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     }
 }
 
-// Updated to place food in a random location that is not occupied by either player snake or AI snake
+// Place food in a random location that is not occupied by either player snake or AI snake
 void Game::PlaceFood() {
     int x, y;
     while (true) {
@@ -88,7 +88,7 @@ void Game::PlaceFood() {
 }
 
 // Handle logic for checking if either player snake or AI snake has consumed food,
-// if so grow the relevent snake.
+// if so grow the relevant snake.
 void Game::CheckFoodConsumption(Snake &snakeEntity) {
     int new_x = static_cast<int>(snakeEntity.head_x);
     int new_y = static_cast<int>(snakeEntity.head_y);
@@ -103,39 +103,28 @@ void Game::CheckFoodConsumption(Snake &snakeEntity) {
     }
 }
 
-void Game::Update() {
-    if (!snake.alive) return;
-
-    snake.Update();
-
-    if (_withAI) {
-        // Increment the frame count
-        currentFrame++;
-
-        aiSnake.UpdateAI(food, snake); // Determine the next move
-        aiSnake.Update(); // Move the AI snake
+// Update player snake's position
+void Game::UpdatePlayer(Controller const &controller) {
+    std::lock_guard<std::mutex> guard(gameMutex);
+    controller.HandleInput(reinterpret_cast<int &>(_gameOver), snake); // todo: not sure this works
+    if (_gameOver) {
+        return;
     }
-
-    // Check food consumption for the player snake
-    CheckFoodConsumption(snake);
-
-    // Check food consumption for the AI snake
-    if (_withAI) {
-        CheckFoodConsumption(aiSnake);
-    }
+    snake.Update();  // Update the player's snake
+    CheckFoodConsumption(snake);  // Check if the player's snake ate food
 }
 
+// Update AI snake's position
+void Game::UpdateAI() {
+    std::lock_guard<std::mutex> guard(gameMutex);
+    if (_gameOver || !_withAI) { // don't run AI logic in single player mode
+        return;
+    }
+    aiSnake.UpdateAI(food, snake); // AI logic
+    aiSnake.Update(); // Update AI snake's position
+    CheckFoodConsumption(aiSnake);  // Check if the AI snake ate food
+}
 
-
-//// Game logic thread
-//int Game::GameLogicThread(void *data) {
-//    Game* game = static_cast<Game*>(data);
-//    while (!game->GetGameOver()) {
-//        game->Update(); // Update game logic
-//        SDL_Delay(8); // Roughly 60 updates per second
-//    }
-//    return 0;
-//}
 
 // Getters and Setters
 
@@ -162,3 +151,4 @@ void Game::SetWithAITrue() {
 void Game::SetWithAIFalse() {
     _withAI = false;
 }
+

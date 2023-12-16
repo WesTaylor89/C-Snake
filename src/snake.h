@@ -34,8 +34,11 @@ public:
     int getGridHeight() const;
     void setGridHeight(int height);
 
+
+    SDL_Point NextHeadPosition(Direction dir) const;
 private:
     void UpdateHead();
+
     void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
 
     bool growing{false};

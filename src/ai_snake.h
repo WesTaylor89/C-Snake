@@ -18,13 +18,15 @@ public:
 
     void UpdateAI(const SDL_Point &food, const Snake &playerSnake);
 
+
+    Snake::Direction DetermineDirection(const SDL_Point& next_step);
+    bool IsSafeDirection(Direction dir, const Snake& playerSnake);
+    SDL_Point NextHeadPosition(Direction dir) const;
+    Snake::Direction FindAlternativeDirection(const Snake& playerSnake);
+
+
+
 private:
-    int ManhattanDistance(const SDL_Point &a, const SDL_Point &b, int grid_width, int grid_height);
-
-    std::vector<SDL_Point> CalculatePath(const SDL_Point &start, const SDL_Point &goal, const Snake &playerSnake);
-
-    std::vector<SDL_Point> ConstructPath(const std::unordered_map<SDL_Point, SDL_Point, SDLPointHash, SDLPointEqual> &came_from, SDL_Point current);
-
     float speed{0.1f}; // default was 0.01f
 
     std::vector<SDL_Point> path;

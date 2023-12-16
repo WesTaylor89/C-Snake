@@ -1,6 +1,5 @@
 #include "snake.h"
 #include <cmath>
-#include <iostream>
 
 void Snake::Update() {
     SDL_Point prev_cell{
@@ -46,38 +45,32 @@ void Snake::UpdateHead() {
     head_y = fmod(head_y + grid_height, grid_height);
 }
 
-//void Snake::UpdateHead() {
-//    switch (direction) {
-//        case Direction::kUp:
-//            head_y -= speed;
-//            break;
-//
-//        case Direction::kDown:
-//            head_y += speed;
-//            break;
-//
-//        case Direction::kLeft:
-//            head_x -= speed;
-//            break;
-//
-//        case Direction::kRight:
-//            head_x += speed;
-//            break;
-//    }
-//
-//    // Check for boundary conditions
-//    if (head_x < 0) {
-//        head_x = 0;
-//    } else if (head_x >= grid_width) {
-//        head_x = grid_width - 1;
-//    }
-//
-//    if (head_y < 0) {
-//        head_y = 0;
-//    } else if (head_y >= grid_height) {
-//        head_y = grid_height - 1;
-//    }
-//}
+// Predict the future head position based on the current head position
+SDL_Point Snake::NextHeadPosition(Direction dir) const {
+    int new_x = static_cast<int>(head_x);
+    int new_y = static_cast<int>(head_y);
+
+    switch (dir) {
+        case Direction::kUp:
+            new_y -= 1;
+            break;
+        case Direction::kDown:
+            new_y += 1;
+            break;
+        case Direction::kLeft:
+            new_x -= 1;
+            break;
+        case Direction::kRight:
+            new_x += 1;
+            break;
+    }
+
+    // Handle wrapping of coordinates if your game allows it
+    new_x = fmod(new_x + grid_width, grid_width);
+    new_y = fmod(new_y + grid_height, grid_height);
+
+    return {new_x, new_y};
+}
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
     // Add previous head location to vector

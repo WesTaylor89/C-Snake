@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <random>
+#include <mutex>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -17,8 +18,6 @@ class Game {
     void Run(Controller const &controller, Renderer &renderer,
            std::size_t target_frame_duration);
 
-    static int GameLogicThread(void* data);
-
     // Getters
     int GetScore() const;
     int GetSize() const;
@@ -30,10 +29,12 @@ class Game {
     void SetWithAITrue();
     void SetWithAIFalse();
 
+    void UpdatePlayer(Controller const &controller);
+    void UpdateAI();
  private:
     Snake snake;
     ai_snake aiSnake;
-    SDL_Point food;
+    SDL_Point food{};
 
     std::random_device dev;
     std::mt19937 engine;
@@ -45,10 +46,10 @@ class Game {
     bool _withAI = false; // determine if the game is played with AI
 
     void PlaceFood();
-    void Update();
     void CheckFoodConsumption(Snake &snake);
 
-    std::size_t currentFrame = 0;
+    std::mutex gameMutex;
+
 
 };
 
