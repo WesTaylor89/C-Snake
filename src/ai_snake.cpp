@@ -90,6 +90,14 @@ void ai_snake::UpdateAI(const SDL_Point& food, const Snake& playerSnake) {
     Update();
 }
 
+void ai_snake::Reset() {
+    Snake::Reset(); // Call the base class Reset to reset inherited state
+
+    // Reset ai_snake-specific state
+    path.clear();               // Clear the path
+    positionsHistory.clear();   // Clear the history of positions
+}
+
 
 
 

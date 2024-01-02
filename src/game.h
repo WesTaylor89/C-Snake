@@ -31,6 +31,8 @@ class Game {
 
     void UpdatePlayer(Controller const &controller);
     void UpdateAI();
+    void Reset();
+
  private:
     Snake snake;
     ai_snake aiSnake;

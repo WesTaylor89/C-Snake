@@ -17,6 +17,7 @@ public:
     ai_snake(int grid_width, int grid_height) : Snake(grid_width, grid_height) {}
 
     void UpdateAI(const SDL_Point &food, const Snake &playerSnake);
+    void Reset();
 
 
     Snake::Direction DetermineDirection(const SDL_Point& next_step);

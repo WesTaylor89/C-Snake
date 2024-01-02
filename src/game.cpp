@@ -9,6 +9,10 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, bool withAI)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)),
       _withAI(withAI) {
+
+    // Set the player snake as player-controlled so score only updates when it eats food
+    snake.SetAsPlayerControlled(true);
+
     PlaceFood();
 }
 
@@ -95,11 +99,15 @@ void Game::CheckFoodConsumption(Snake &snakeEntity) {
 
     // Check if there's food over here
     if (food.x == new_x && food.y == new_y) {
-        _score++;
+        // Only add to _score if playerSnake has eaten food
+        if (snakeEntity.ShouldIncreaseScore()) {
+            _score++;
+        }
+        // Place a new food
         PlaceFood();
         // Grow snake and increase speed.
         snakeEntity.GrowBody();
-        //snakeEntity.speed += 0.02; // disbled to debug
+        //snakeEntity.speed += 0.02; // disabled to debug
     }
 }
 
@@ -123,6 +131,16 @@ void Game::UpdateAI() {
     aiSnake.UpdateAI(food, snake); // AI logic
     aiSnake.Update(); // Update AI snake's position
     CheckFoodConsumption(aiSnake);  // Check if the AI snake ate food
+}
+
+void Game::Reset() {
+    _score = 0;
+    _gameOver = false;
+    snake.Reset();   // Assuming you have a Reset method in your Snake class
+    if (_withAI) {
+        aiSnake.Reset(); // Same for the AI snake
+    }
+    PlaceFood();     // Place the food again for the new game
 }
 
 

@@ -14,10 +14,17 @@ public:
         grid_width(grid_width),
         grid_height(grid_height) {}
 
+
+    virtual ~Snake() = default;
+
     void Update();
 
     void GrowBody();
     bool SnakeCell(int x, int y) const;
+
+    void SetAsPlayerControlled(bool isPlayerControlled);
+    virtual bool ShouldIncreaseScore() const;
+    void Reset();
 
     Direction direction = Direction::kUp;
 
@@ -44,6 +51,7 @@ private:
     bool growing{false};
     int grid_width;
     int grid_height;
+    bool isPlayerControlled = false;
 };
 
 #endif

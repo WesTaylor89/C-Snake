@@ -25,21 +25,11 @@ int main() {
     Scoresheet scoreSheet;
     Menu menu;
 
-
-    // Create threads for player and AI logic
-    std::thread playerThread([&game, &controller]() {
-        while (!game.GetGameOver()) {
-            game.UpdatePlayer(*controller);
-            std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Adjust timing as needed
-        }
-    });
-
-    std::thread aiThread([&game]() {
-        while (!game.GetGameOver()) {
-            game.UpdateAI();
-            std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Adjust timing as needed
-        }
-    });
+    // Create thread variables and active bool checks
+    std::thread playerThread;
+    std::thread aiThread;
+    bool playerThreadActive = false;
+    bool aiThreadActive = false;
 
     // Launch player name input screen and get player name input
     // (should refactor to a single function call)
@@ -59,13 +49,27 @@ int main() {
     bool quit = false;
     while (!quit) {
 
+
+        // Render Menu and update as player makes selections
         renderer->RenderMenu(menu.GetOptions(), menu.GetSelectedOption());
         controller->UpdateMenu(*renderer, menu);
 
+
+
         switch (menu.GetSelectedOption()) {
             case 0: // Single Player
-                // Run game
+
                 game.SetWithAIFalse();
+                // Assign thread
+                playerThread = std::thread([&game, &controller]() {
+                    while (!game.GetGameOver()) {
+                        game.UpdatePlayer(*controller);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Adjust timing as needed
+                    }
+                });
+                playerThreadActive = true;
+
+                // Run game
                 game.Run(*controller, *renderer, kMsPerFrame);
 
                 // Add _score to scoreboard
@@ -77,8 +81,27 @@ int main() {
                 std::cout << "Size: " << game.GetSize() << "\n";
                 break;
             case 1: // vs AI
-                // Run game
+
                 game.SetWithAITrue();
+
+                // Assign threads
+                playerThread = std::thread([&game, &controller]() {
+                    while (!game.GetGameOver()) {
+                        game.UpdatePlayer(*controller);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Adjust timing as needed
+                    }
+                });
+
+                aiThread = std::thread([&game]() {
+                    while (!game.GetGameOver()) {
+                        game.UpdateAI();
+                        std::this_thread::sleep_for(std::chrono::milliseconds(16)); // Adjust timing as needed
+                    }
+                });
+                playerThreadActive = true;
+                aiThreadActive = true;
+
+                // Run game
                 game.Run(*controller, *renderer, kMsPerFrame);
 
                 // Add _score to scoreboard
@@ -99,17 +122,21 @@ int main() {
                 quit = true;
                 break;
         }
-    }
-    // Join threads
-    if (playerThread.joinable()) {
-        playerThread.join();
-    }
-    if (aiThread.joinable()) {
-        aiThread.join();
-    }
 
-    // Wait for game logic thread to terminate
-//    SDL_WaitThread(logicThread, nullptr);
+        // Join threads after exiting the menu loop
+        if (playerThreadActive && playerThread.joinable()) {
+            playerThread.join();
+            playerThreadActive = false;
+        }
+        if (aiThreadActive && aiThread.joinable()) {
+            aiThread.join();
+            aiThreadActive = false;
+        }
+
+        // Reset game state
+        game.Reset();
+
+    }
 
     // exit
     return 0;
