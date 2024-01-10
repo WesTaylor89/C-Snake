@@ -65,6 +65,8 @@ This is a my submission for the Capstone project in the [Udacity C++ Nanodegree 
 * Note that you may need to add SDL2d.dll and SDL2_tff.dll (installed when you install the libraries)
 * to your systems path if using Windows. This link may help:
 * https://www.studyplan.dev/sdl-dev/sdl-setup-windows
+* If using Windows the eaisest way to install SDL2 and SLD2_tff is to use vcpkg:
+* https://github.com/microsoft/vcpkg
 
 ## Basic Build Instructions
 
