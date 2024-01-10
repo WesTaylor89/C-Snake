@@ -4,7 +4,6 @@
 
 #include "ai_snake.h"
 #include "snake.h"
-#include "sdl_utility.h"
 #include <queue>
 
 // Best solution so far. AI Snake occasionally freezes but doesn't oscillate.
@@ -91,9 +90,9 @@ void ai_snake::UpdateAI(const SDL_Point& food, const Snake& playerSnake) {
 }
 
 void ai_snake::Reset() {
-    Snake::Reset(); // Call the base class Reset to reset inherited state
+    Snake::Reset(); // Call the base class ResetState to reset inherited state
 
-    // Reset ai_snake-specific state
+    // ResetState ai_snake-specific state
     path.clear();               // Clear the path
     positionsHistory.clear();   // Clear the history of positions
 }

@@ -114,7 +114,7 @@ void Game::CheckFoodConsumption(Snake &snakeEntity) {
 // Update player snake's position
 void Game::UpdatePlayer(Controller const &controller) {
     std::lock_guard<std::mutex> guard(gameMutex);
-    controller.HandleInput(reinterpret_cast<int &>(_gameOver), snake); // todo: not sure this works
+    controller.HandleInput(reinterpret_cast<int &>(_gameOver), snake);
     if (_gameOver) {
         return;
     }
@@ -133,14 +133,14 @@ void Game::UpdateAI() {
     CheckFoodConsumption(aiSnake);  // Check if the AI snake ate food
 }
 
-void Game::Reset() {
+void Game::ResetState() {
     _score = 0;
     _gameOver = false;
-    snake.Reset();   // Assuming you have a Reset method in your Snake class
+    snake.Reset();
     if (_withAI) {
-        aiSnake.Reset(); // Same for the AI snake
+        aiSnake.Reset();
     }
-    PlaceFood();     // Place the food again for the new game
+    PlaceFood();
 }
 
 

@@ -107,25 +107,25 @@ bool Snake::SnakeCell(int x, int y) const {
     return false;
 }
 
-// Reset Snake State
+// ResetState Snake State
 void Snake::Reset() {
-    // Reset the snake's size to 1
+    // ResetState the snake's size to 1
     size = 1;
 
-    // Reset the snake's position to the center of the grid
+    // ResetState the snake's position to the center of the grid
     head_x = grid_width / 2;
     head_y = grid_height / 2;
 
     // Clear the body vector, as the snake will be back to its initial size
     body.clear();
 
-    // Reset the snake's direction
+    // ResetState the snake's direction
     direction = Direction::kUp;
 
-    // Reset other relevant attributes
+    // ResetState other relevant attributes
     alive = true;
     growing = false;
-    speed = 0.1f; // Reset to default speed or any initial speed
+    speed = 0.1f; // ResetState to default speed or any initial speed
 }
 
 int Snake::getGridWidth() const {

@@ -112,11 +112,24 @@ int main() {
                 std::cout << "Score: " << game.GetScore() << "\n";
                 std::cout << "Size: " << game.GetSize() << "\n";
                 break;
-            case 2: // Score Board
-                // ... Scoreboard logic ...
-                std::cout << "Score Board menu" << std::endl;
+            case 2: {// Score Board
+                // Render Score Board
+                renderer->RenderScoreSheet(scoreSheet);
+
                 scoreSheet.displayScores();
+
+                // Wait for user input to exit Score Board
+                SDL_Event e;
+                bool scoreBoardActive = true;
+                while (scoreBoardActive) {
+                    while (SDL_PollEvent(&e)) {
+                        if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)) {
+                            scoreBoardActive = false;
+                        }
+                    }
+                }
                 break;
+            };
 
             case 3: // Quit
                 quit = true;
@@ -133,8 +146,8 @@ int main() {
             aiThreadActive = false;
         }
 
-        // Reset game state
-        game.Reset();
+        // ResetState game state
+        game.ResetState();
 
     }
 

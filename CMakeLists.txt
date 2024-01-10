@@ -22,7 +22,6 @@ add_executable(SnakeGame
         src/menu.cpp
         src/ai_snake.h
         src/ai_snake.cpp
-        src/sdl_utility.h
 )
 
 target_include_directories(SnakeGame PRIVATE

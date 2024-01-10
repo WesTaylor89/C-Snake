@@ -12,6 +12,8 @@
 #include <menu.h>
 #include "renderer.h"
 
+// The menu class holds a vector of the options rendered on the main menu.
+// It also owns the _selectedOption variable with tells the renderer class what to render
 class Menu {
 public:
     // Constructor

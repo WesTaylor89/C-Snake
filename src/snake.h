@@ -4,6 +4,7 @@
 #include <vector>
 #include "SDL.h"
 
+
 class Snake {
 public:
     enum class Direction { kUp, kDown, kLeft, kRight };
@@ -24,7 +25,8 @@ public:
 
     void SetAsPlayerControlled(bool isPlayerControlled);
     virtual bool ShouldIncreaseScore() const;
-    void Reset();
+
+    virtual void Reset();
 
     Direction direction = Direction::kUp;
 
@@ -42,7 +44,7 @@ public:
     void setGridHeight(int height);
 
 
-    SDL_Point NextHeadPosition(Direction dir) const;
+    virtual SDL_Point NextHeadPosition(Direction dir) const;
 private:
     void UpdateHead();
 

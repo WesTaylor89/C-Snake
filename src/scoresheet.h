@@ -10,6 +10,8 @@
 #include <vector>
 #include <iostream>
 
+
+// The Scoresheet class contains the logic to be rendered by the renderer class.
 class Scoresheet {
 public:
     // Constructor
@@ -23,6 +25,8 @@ public:
 
     // Creates a new player/_score pair.
     std::pair<std::string, int> createPair(std::string name, int score);
+
+    const std::vector<std::pair<std::string, int>>& getScores() const;
 
     // Set player name
     void setPlayerName(std::string playerName);

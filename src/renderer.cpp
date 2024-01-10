@@ -9,12 +9,12 @@ Renderer::Renderer(const std::size_t screen_width,
                    const std::size_t screen_height,
                    const std::size_t grid_width,
                    const std::size_t grid_height)
-        : screen_width(screen_width),
+        : sdl_window(nullptr, SDL_DestroyWindow),
+          sdl_renderer(nullptr, SDL_DestroyRenderer),
+          screen_width(screen_width),
           screen_height(screen_height),
           grid_width(grid_width),
-          grid_height(grid_height),
-          sdl_window(nullptr, SDL_DestroyWindow),
-          sdl_renderer(nullptr, SDL_DestroyRenderer) {
+          grid_height(grid_height) {
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -46,7 +46,7 @@ Renderer::Renderer(const std::size_t screen_width,
     }
 
     // Load a font using SDL_ttf
-    font = TTF_OpenFont("C:/Users/Wesle/CLionProjects/SDL2Test/fonts/Debrosee-ALPnL.ttf", 24);
+    font = TTF_OpenFont(R"(C:\Users\Wesle\CLionProjects\SDL2Test\fonts\arial.ttf)", 24);
     if (!font) {
         std::cerr << "Failed to load font. SDL_ttf Error: " << TTF_GetError() << "\n";
         // Handle error appropriately
@@ -228,4 +228,38 @@ void Renderer::RenderNameInput(const std::string &currentInput) {
     SDL_RenderPresent(sdl_renderer.get());
 }
 
+void Renderer::RenderScoreSheet(const Scoresheet& scoresheet) const {
+    // Clear screen
+    SDL_SetRenderDrawColor(sdl_renderer.get(), 0x1E, 0x1E, 0x1E, 0xFF);
+    SDL_RenderClear(sdl_renderer.get());
 
+    // Set text color for the title and scores
+    SDL_Color textColor = {255, 255, 255, 255}; // White color
+    int xPos = screen_width / 4;
+    int yPos = 50; // Starting Y position for the title
+    int lineSpacing = 30; // Spacing between lines
+
+    // Render title "Score Sheet"
+    SDL_Surface* titleSurface = TTF_RenderText_Solid(font, "Score Sheet", textColor);
+    SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(sdl_renderer.get(), titleSurface);
+    SDL_Rect titleRect = {xPos, yPos, titleSurface->w, titleSurface->h};
+    SDL_RenderCopy(sdl_renderer.get(), titleTexture, nullptr, &titleRect);
+    SDL_FreeSurface(titleSurface);
+    SDL_DestroyTexture(titleTexture);
+    yPos += titleRect.h + lineSpacing;
+
+    // Render scores
+    for (const auto& scorePair : scoresheet.getScores()) {
+        std::string scoreText = scorePair.first + ": " + std::to_string(scorePair.second);
+        SDL_Surface* scoreSurface = TTF_RenderText_Solid(font, scoreText.c_str(), textColor);
+        SDL_Texture* scoreTexture = SDL_CreateTextureFromSurface(sdl_renderer.get(), scoreSurface);
+        SDL_Rect scoreRect = {xPos, yPos, scoreSurface->w, scoreSurface->h};
+        SDL_RenderCopy(sdl_renderer.get(), scoreTexture, nullptr, &scoreRect);
+        SDL_FreeSurface(scoreSurface);
+        SDL_DestroyTexture(scoreTexture);
+        yPos += scoreRect.h + lineSpacing;
+    }
+
+    // Update Screen
+    SDL_RenderPresent(sdl_renderer.get());
+}

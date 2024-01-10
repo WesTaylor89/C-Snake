@@ -38,3 +38,7 @@ std::string Scoresheet::getPlayerName() {
     return _playerName;
 }
 
+const std::vector<std::pair<std::string, int>> &Scoresheet::getScores() const {
+    return scores;
+}
+

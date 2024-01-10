@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "menu.h"
 
+// The Controller class handles user input in the name entry, game menu and in the game
 class Controller {
 public:
     int HandleInput(int &game_running, Snake &snake) const;

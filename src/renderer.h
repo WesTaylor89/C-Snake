@@ -6,15 +6,17 @@
 #include "SDL.h"
 #include "snake.h"
 #include "ai_snake.h"
+#include "scoresheet.h"
 #include <SDL2/SDL_ttf.h>
 #include <memory>
 
+// The Renderer class uses the SDL2 library to render the game window, snake, food, scoreboard and name input
 class Renderer {
 public:
-    Renderer(const std::size_t screen_width,
-             const std::size_t screen_height,
-             const std::size_t grid_width,
-             const std::size_t grid_height);
+    Renderer(std::size_t screen_width,
+             std::size_t screen_height,
+             std::size_t grid_width,
+             std::size_t grid_height);
     ~Renderer();
 
     void RenderSnake(Snake const &snake, SDL_Rect &block);
@@ -27,6 +29,7 @@ public:
     void RenderMenu(const std::vector<std::string> &options, int selectedOption);
 //    void RenderEnterNameForm();
     void RenderNameInput(const std::string &currentInput);
+    void RenderScoreSheet(const Scoresheet& scoresheet) const;
 
 private:
 
