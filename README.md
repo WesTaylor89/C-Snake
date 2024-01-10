@@ -56,10 +56,15 @@ This is a my submission for the Capstone project in the [Udacity C++ Nanodegree 
   * All installation instructions can be found [here](https://wiki.libsdl.org/Installation)
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
 * SDL2_ttf >= 2.20.2
+  * Can be found here: https://github.com/libsdl-org/SDL_ttf/releases
 * gcc/g++ >= 5.4
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
+
+* Note that you may need to add SDL2d.dll and SDL2_tff.dll (installed when you install the libraries)
+* to your systems path if using Windows. This link may help:
+* https://www.studyplan.dev/sdl-dev/sdl-setup-windows
 
 ## Basic Build Instructions
 

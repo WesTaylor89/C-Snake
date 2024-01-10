@@ -46,7 +46,7 @@ Renderer::Renderer(const std::size_t screen_width,
     }
 
     // Load a font using SDL_ttf
-    font = TTF_OpenFont(R"(C:\Users\Wesle\CLionProjects\SDL2Test\fonts\arial.ttf)", 24);
+    font = TTF_OpenFont(R"(fonts/arial.ttf)", 24);
     if (!font) {
         std::cerr << "Failed to load font. SDL_ttf Error: " << TTF_GetError() << "\n";
         // Handle error appropriately
