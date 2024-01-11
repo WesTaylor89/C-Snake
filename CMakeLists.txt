@@ -1,35 +1,20 @@
 cmake_minimum_required(VERSION 3.7)
-project(SDL2Test)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread")
+project(SDL2Test)
 
-set(CXX_FLAGS "-Wall")
-set(CMAKE_CXX_FLAGS "${CXX_FLAGS}")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
+find_package(SDL2TTF REQUIRED)
 
-add_executable(SnakeGame
-        src/main.cpp
-        src/game.cpp
-        src/controller.cpp
-        src/renderer.cpp
-        src/snake.cpp
-        src/scoresheet.h
-        src/scoresheet.cpp
-        src/menu.h
-        src/menu.cpp
-        src/ai_snake.h
-        src/ai_snake.cpp
-)
+include_directories(${SDL2_INCLUDE_DIRS} src)
+include_directories(${SDL2TTF_INCLUDE_DIRS} src)
 
-target_include_directories(SnakeGame PRIVATE
-        ${SDL2_INCLUDE_DIRS}
-        ${SDL2_TTF_INCLUDE_DIRS}
-        src)
+file(GLOB project_SRCS src/*.cpp)
 
-target_link_libraries(SnakeGame PRIVATE
-        SDL2::SDL2
-        SDL2::SDL2main
-        SDL2_ttf::SDL2_ttf)
+add_executable(ShootingGame ${project_SRCS})
+
+string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+target_link_libraries(ShootingGame ${SDL2_LIBRARIES} SDL2_ttf)
